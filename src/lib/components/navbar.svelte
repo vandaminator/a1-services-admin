@@ -1,0 +1,67 @@
+<script lang="ts">
+  import { AppBar, LightSwitch, getDrawerStore } from "@skeletonlabs/skeleton";
+  import type { DrawerSettings } from "@skeletonlabs/skeleton";
+  import Icon from "@iconify/svelte";
+  import { page } from "$app/stores";
+  import { getContext } from "svelte";
+  import type { Writable } from "svelte/store";
+
+  const drawerStore = getDrawerStore();
+  const store = getContext<
+    Writable<{
+      contacts: string;
+      created_at: string;
+      id: number;
+      image: string | null;
+      name: string;
+      owners: string;
+    }>
+  >("store");
+
+  const handleOpen = () => {
+    const drawerSettings: DrawerSettings = {
+      id: "nav",
+    };
+    drawerStore.open(drawerSettings);
+  };
+</script>
+
+<AppBar
+  gridColumns="grid-cols-3"
+  slotDefault="place-self-center"
+  slotTrail="place-content-end"
+  class="mb-4"
+>
+  <svelte:fragment slot="lead">
+    <a
+      class="text-2xl font-bold text-primary-400-500-token max-sm:hidden"
+      href="/dashboard">{$store.name ?? "A1-services"} Admin</a
+    >
+    <button
+      type="button"
+      class={`btn-icon variant-filled-surface sm:hidden ${$page.url.pathname === "/" ? "hidden" : ""}`}
+      on:click={handleOpen}
+    >
+      <Icon icon="mingcute:menu-fill" />
+    </button>
+  </svelte:fragment>
+
+  <!-- middle -->
+  <a class="text-xl font-bold text-primary-400-500-token sm:hidden" href="/dashboard"
+    >Student burger Admin</a
+  >
+
+  <svelte:fragment slot="trail">
+    <LightSwitch class="max-sm:hidden" />
+  </svelte:fragment>
+  <!-- <svelte:fragment slot="headline">
+    <div class="flex items-center gap-1 text-secondary-500">
+      <button class="btn-icon variant-soft-surface"
+        ><Icon icon="entypo:home" /></button
+      >
+      {#each path.split("/").slice(1) as p}
+        /<a href={p}>{p}</a>
+      {/each}
+    </div>
+  </svelte:fragment> -->
+</AppBar>
